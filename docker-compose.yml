@@ -2,6 +2,7 @@ services:
   db:
     image: mariadb:latest
     container_name: zm-db
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: zm
@@ -13,6 +14,7 @@ services:
   web:
     build: ./web
     container_name: zm-web
+    restart: always
     shm_size: '1gb' # TRÈS IMPORTANT pour les flux vidéo
     ports:
       - "8080:80"
@@ -24,3 +26,9 @@ services:
       - MYSQL_PASSWORD=zmpassword
     volumes:
       - zm-events:/var/lib/zoneminder/events
+      - zm-images:/var/lib/zoneminder/images
+
+volumes:
+  zm-db-data:
+  zm-events:
+  zm-images:
