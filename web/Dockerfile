@@ -3,7 +3,7 @@ FROM archlinux:latest
 # 1. Installation des dépendances système et outils de compilation
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm base-devel git apache php php-apache php-gd php-intl php-apcu \
-    ffmpeg vlc libvlc mariadb-client net-tools shared-mime-info --needed
+    ffmpeg vlc libvlc mariadb net-tools shared-mime-info --needed
 
 # 2. Création d'un utilisateur "builder" (makepkg ne peut pas tourner en root)
 RUN useradd -m builder && \
