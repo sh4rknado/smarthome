@@ -5,6 +5,12 @@ RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm base-devel git apache php php-apache php-gd php-intl php-apcu \
     ffmpeg vlc libvlc mariadb net-tools shared-mime-info --needed
 
+# 3. Récupération et compilation de ZoneMinder (via AUR)
+# Note : Nous installons aussi une dépendance commune de l'AUR si nécessaire
+# Ajout de core_perl au PATH de manière permanente
+RUN echo 'appendpath "/usr/bin/core_perl"' > /etc/profile.d/perlbin.sh && \
+    chmod +x /etc/profile.d/perlbin.sh
+    
 # 2. Création d'un utilisateur "builder" (makepkg ne peut pas tourner en root)
 RUN useradd -m builder && \
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -15,12 +21,6 @@ WORKDIR /home/builder
 RUN git clone https://aur.archlinux.org/yay.git && \ 
     cd yay && \
     makepkg -si --noconfirm
-
-# 3. Récupération et compilation de ZoneMinder (via AUR)
-# Note : Nous installons aussi une dépendance commune de l'AUR si nécessaire
-# Ajout de core_perl au PATH de manière permanente
-RUN echo 'appendpath "/usr/bin/core_perl"' > /etc/profile.d/perlbin.sh && \
-    chmod +x /etc/profile.d/perlbin.sh
 
 # Pour que le PATH soit aussi disponible immédiatement durant le build
 ENV PATH="${PATH}:/usr/bin/core_perl"
