@@ -31,7 +31,8 @@ USER root
 ENV PATH="${PATH}:/usr/bin/core_perl"
 
 # 5. Configuration Apache pour ZoneMinder
-RUN cp /etc/zm/apache.conf /etc/httpd/conf/extra/zoneminder.conf && \
+RUN mkdir /etc/zm && \
+    cp /etc/zm/apache.conf /etc/httpd/conf/extra/zoneminder.conf && \
     echo "Include conf/extra/zoneminder.conf" >> /etc/httpd/conf/httpd.conf
 
 # Configuration PHP (activation des extensions nécessaires)
