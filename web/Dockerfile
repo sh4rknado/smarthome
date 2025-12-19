@@ -11,6 +11,11 @@ RUN useradd -m builder && \
 USER builder
 WORKDIR /home/builder
 
+# install aur helper
+RUN git clone https://aur.archlinux.org/yay.git && \ 
+    cd yay && \
+    makepkg -si --noconfirm
+
 # 3. Récupération et compilation de ZoneMinder (via AUR)
 # Note : Nous installons aussi une dépendance commune de l'AUR si nécessaire
 RUN git clone https://aur.archlinux.org/zoneminder.git && \
