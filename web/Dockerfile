@@ -30,25 +30,18 @@ RUN yay -S zoneminder --noconfirm
 USER root
 ENV PATH="${PATH}:/usr/bin/core_perl"
 
-# 5. Configuration Apache pour ZoneMinder
-RUN cp /etc/zoneminder/apache.conf /etc/httpd/conf/extra/zoneminder.conf && \
-    echo "Include conf/extra/zoneminder.conf" >> /etc/httpd/conf/httpd.conf
-
 # Configuration Apache/PHP
-RUN sed -i 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/' /etc/httpd/conf/httpd.conf && \
+RUN  echo "Include conf/extra/zoneminder.conf" >> /etc/httpd/conf/httpd.conf && \
+    sed -i 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/' /etc/httpd/conf/httpd.conf && \
     sed -i 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/' /etc/httpd/conf/httpd.conf && \
     echo "LoadModule php_module modules/libphp.so" >> /etc/httpd/conf/httpd.conf && \
-    echo "Include conf/extra/php_module.conf" >> /etc/httpd/conf/httpd.conf
-
-# Activation des modules Apache requis par ZoneMinder
-RUN sed -i 's/#LoadModule proxy_module/LoadModule proxy_module/' /etc/httpd/conf/httpd.conf && \
+    echo "Include conf/extra/php_module.conf" >> /etc/httpd/conf/httpd.conf && \
+    sed -i 's/#LoadModule proxy_module/LoadModule proxy_module/' /etc/httpd/conf/httpd.conf && \
     sed -i 's/#LoadModule proxy_fcgi_module/LoadModule proxy_fcgi_module/' /etc/httpd/conf/httpd.conf && \
     sed -i 's/#LoadModule rewrite_module/LoadModule rewrite_module/' /etc/httpd/conf/httpd.conf && \
     sed -i 's/#LoadModule cgid_module/LoadModule cgid_module/' /etc/httpd/conf/httpd.conf && \
-    sed -i 's/#LoadModule cgi_module/LoadModule cgi_module/' /etc/httpd/conf/httpd.conf
-    
-# Configuration PHP (activation des extensions nécessaires)
-RUN sed -i 's/;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini && \
+    sed -i 's/#LoadModule cgi_module/LoadModule cgi_module/' /etc/httpd/conf/httpd.conf && \
+    sed -i 's/;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini && \
     sed -i 's/;extension=gd/extension=gd/' /etc/php/php.ini && \
     sed -i 's/;extension=intl/extension=intl/' /etc/php/php.ini
 
