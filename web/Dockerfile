@@ -18,12 +18,17 @@ RUN git clone https://aur.archlinux.org/yay.git && \
 
 # 3. Récupération et compilation de ZoneMinder (via AUR)
 # Note : Nous installons aussi une dépendance commune de l'AUR si nécessaire
-RUN git clone https://aur.archlinux.org/zoneminder.git && \
-    cd zoneminder && \
-    makepkg -si --noconfirm
+# Ajout de core_perl au PATH de manière permanente
+RUN echo 'appendpath "/usr/bin/core_perl"' > /etc/profile.d/perlbin.sh && \
+    chmod +x /etc/profile.d/perlbin.sh
+
+# Pour que le PATH soit aussi disponible immédiatement durant le build
+ENV PATH="${PATH}:/usr/bin/core_perl"
+RUN yay -S zoneminder --noconfirm 
 
 # 4. Retour à l'utilisateur root pour la configuration finale
 USER root
+ENV PATH="${PATH}:/usr/bin/core_perl"
 
 # 5. Configuration Apache pour ZoneMinder
 RUN cp /etc/zm/apache.conf /etc/httpd/conf/extra/zoneminder.conf && \
