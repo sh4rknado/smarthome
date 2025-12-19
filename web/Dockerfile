@@ -31,9 +31,14 @@ USER root
 ENV PATH="${PATH}:/usr/bin/core_perl"
 
 # 5. Configuration Apache pour ZoneMinder
-RUN mkdir /etc/zm && \
-    cp /etc/zm/apache.conf /etc/httpd/conf/extra/zoneminder.conf && \
+RUN cp /etc/zoneminder/apache.conf /etc/httpd/conf/extra/zoneminder.conf && \
     echo "Include conf/extra/zoneminder.conf" >> /etc/httpd/conf/httpd.conf
+
+# Configuration Apache/PHP
+RUN sed -i 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/' /etc/httpd/conf/httpd.conf && \
+    sed -i 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/' /etc/httpd/conf/httpd.conf && \
+    echo "LoadModule php_module modules/libphp.so" >> /etc/httpd/conf/httpd.conf && \
+    echo "Include conf/extra/php_module.conf" >> /etc/httpd/conf/httpd.conf
 
 # Configuration PHP (activation des extensions nécessaires)
 RUN sed -i 's/;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini && \
