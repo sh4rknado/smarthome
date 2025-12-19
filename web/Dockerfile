@@ -40,6 +40,13 @@ RUN sed -i 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/' /etc/ht
     echo "LoadModule php_module modules/libphp.so" >> /etc/httpd/conf/httpd.conf && \
     echo "Include conf/extra/php_module.conf" >> /etc/httpd/conf/httpd.conf
 
+# Activation des modules Apache requis par ZoneMinder
+RUN sed -i 's/#LoadModule proxy_module/LoadModule proxy_module/' /etc/httpd/conf/httpd.conf && \
+    sed -i 's/#LoadModule proxy_fcgi_module/LoadModule proxy_fcgi_module/' /etc/httpd/conf/httpd.conf && \
+    sed -i 's/#LoadModule rewrite_module/LoadModule rewrite_module/' /etc/httpd/conf/httpd.conf && \
+    sed -i 's/#LoadModule cgid_module/LoadModule cgid_module/' /etc/httpd/conf/httpd.conf && \
+    sed -i 's/#LoadModule cgi_module/LoadModule cgi_module/' /etc/httpd/conf/httpd.conf
+    
 # Configuration PHP (activation des extensions nécessaires)
 RUN sed -i 's/;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini && \
     sed -i 's/;extension=gd/extension=gd/' /etc/php/php.ini && \
